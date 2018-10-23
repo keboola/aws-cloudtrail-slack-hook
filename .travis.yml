@@ -1,0 +1,25 @@
+sudo: true
+
+language: bash
+
+services:
+  - docker
+
+before_install:
+  - docker -v
+  - docker-compose -v
+  - echo $TRAVIS_COMMIT
+  - export ECR_REPOSITORY=keboola/aws-cloudtrail-slack-hook
+  - export ECR_REGISTRY="061240556736.dkr.ecr.us-east-1.amazonaws.com/${ECR_REPOSITORY}"
+  - export ECR_TAG=stage-$TRAVIS_COMMIT
+
+install:
+  - docker build -t $ECR_REPOSITORY .
+  - docker tag $ECR_REPOSITORY:latest "${ECR_REGISTRY}:${ECR_TAG}"
+
+script:
+    - docker run --rm "${ECR_REGISTRY}:${ECR_TAG}" yarn test:lint
+    - >-
+      docker run --rm
+      -e SLACK_URL
+      "${ECR_REGISTRY}:${ECR_TAG}" yarn test:unit

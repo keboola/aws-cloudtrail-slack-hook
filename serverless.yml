@@ -1,0 +1,161 @@
+service: ${env:SERVICE_NAME}
+
+custom:
+  webpackIncludeModules: true
+  papertrail:
+    port: ${env:PAPERTRAIL_PORT}
+  cors:
+    origin: '*'
+    headers:
+    - Content-Type
+    - X-StorageApi-Token
+    - X-Amz-Date
+    - X-Amz-Security-Token
+    - X-Amz-User-Agent
+    allowCredentials: false
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: ${env:REGION}
+  stage: ${env:STAGE}
+  timeout: 20
+  role: lambdaRole
+  versionFunctions: false
+  deploymentBucket:
+    name: "${env:SERVICE_NAME}-${env:REGION}-deployment"
+  stackTags:
+    KeboolaStack: ${env:KEBOOLA_STACK}
+  environment:
+    SERVICE_NAME: ${env:SERVICE_NAME}
+    SLACK_URL: ${env:SLACK_URL}
+    WATCHED_EVENTS: ${env:WATCHED_EVENTS}
+
+package:
+  individually: true
+  include:
+    - src/app/**
+    - src/lambda.js
+    - src/lib/**
+    - node_modules/**
+  exclude:
+    - .git/**
+    - .idea/**
+    - .env
+    - .eslintignore
+    - .eslintrc.json
+    - .travis.yml
+    - docker-compose.yml
+    - Dockerfile
+    - LICENSE
+    - README.md
+    - package.json
+    - yarn.lock
+    - test/**
+
+plugins:
+  - '@keboola/serverless-papertrail-logging'
+  - serverless-webpack
+
+functions:
+  cloudTrailListener:
+    handler: src/lambda.handler
+    tags:
+      KeboolaStack: ${env:KEBOOLA_STACK}
+
+resources:
+  Resources:
+    cloudTrailS3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: '${env:SERVICE_NAME}-${env:REGION}-cloudtrail'
+        NotificationConfiguration:
+          LambdaConfigurations:
+          - Event: s3:ObjectCreated:*
+            Function: { 'Fn::Join': ['', ['arn:aws:lambda:${env:REGION}:', { Ref: 'AWS::AccountId' }, ':function:${env:SERVICE_NAME}-${env:STAGE}-cloudTrailListener']] }
+        LifecycleConfiguration:
+          Rules:
+          - ExpirationInDays: 7
+            Status: Enabled
+        Tags:
+        - Key: 'KeboolaStack'
+          Value: ${env:KEBOOLA_STACK}
+    cloudTrailS3BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: { 'Ref': 'cloudTrailS3Bucket' }
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Sid: AWSCloudTrailAclCheck
+            Effect: Allow
+            Principal:
+              Service: cloudtrail.amazonaws.com
+            Action: s3:GetBucketAcl
+            Resource: 'arn:aws:s3:::${env:SERVICE_NAME}-${env:REGION}-cloudtrail'
+          - Sid: AWSCloudTrailWrite
+            Effect: Allow
+            Principal:
+              Service: cloudtrail.amazonaws.com
+            Action: s3:PutObject
+            Resource: { 'Fn::Join': ['', ['arn:aws:s3:::${env:SERVICE_NAME}-${env:REGION}-cloudtrail/AWSLogs/', { Ref: 'AWS::AccountId' }, '/*']] }
+            Condition:
+              StringEquals:
+                s3:x-amz-acl: bucket-owner-full-control
+    cloudTrail:
+      DependsOn: cloudTrailS3BucketPolicy
+      Type: AWS::CloudTrail::Trail
+      Properties:
+        TrailName: '${env:SERVICE_NAME}'
+        IsLogging: true
+        IncludeGlobalServiceEvents: true
+        IsMultiRegionTrail: true
+        S3BucketName: '${env:SERVICE_NAME}-${env:REGION}-cloudtrail'
+        Tags:
+        - Key: 'KeboolaStack'
+          Value: ${env:KEBOOLA_STACK}
+    triggerLambdaPermission:
+      Type: AWS::Lambda::Permission
+      Properties:
+        Action: lambda:InvokeFunction
+        FunctionName: { 'Fn::Join': ['', ['arn:aws:lambda:${env:REGION}:', { Ref: 'AWS::AccountId' }, ':function:${env:SERVICE_NAME}-${env:STAGE}-cloudTrailListener']] }
+        Principal: s3.amazonaws.com
+        SourceAccount: { 'Ref': 'AWS::AccountId' }
+        SourceArn: 'arn:aws:s3:::${env:SERVICE_NAME}-${env:REGION}-cloudtrail'
+    lambdaRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: '${env:SERVICE_NAME}-${env:REGION}-lambda-role'
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: '${env:SERVICE_NAME}-${env:REGION}-lambda-policy'
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+              - Effect: Allow
+                Action:
+                - s3:GetObject
+                - s3:ListBucket
+                Resource:
+                - 'arn:aws:s3:::${env:SERVICE_NAME}-${env:REGION}-cloudtrail'
+                - 'arn:aws:s3:::${env:SERVICE_NAME}-${env:REGION}-cloudtrail/*'
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: { 'Fn::Join': [':', ['arn:aws:logs', { Ref: 'AWS::Region' }, { Ref: 'AWS::AccountId' }, 'log-group:/aws/lambda/*:*:*']] }
+              - Effect: Allow
+                Action:
+                  - ec2:CreateNetworkInterface
+                  - ec2:DescribeNetworkInterfaces
+                  - ec2:DetachNetworkInterface
+                  - ec2:DeleteNetworkInterface
+                Resource: '*'

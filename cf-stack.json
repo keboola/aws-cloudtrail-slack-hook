@@ -1,0 +1,406 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "AWS Stack for AWS CloudTrail to Slack hook",
+  "Parameters": {
+    "KeboolaStack": {
+      "Type": "String",
+      "Description": "Stack name"
+    },
+    "ServiceName": {
+      "Type": "String",
+      "Description": "Service name"
+    },
+    "Stage": {
+      "Type": "String",
+      "Description": "Service stage",
+      "AllowedValues": [
+        "dev",
+        "test",
+        "prod"
+      ]
+    }
+  },
+  "Resources": {
+    "ServerlessDeploymentPolicy": {
+      "Type": "AWS::IAM::ManagedPolicy",
+      "Properties": {
+        "ManagedPolicyName": {
+          "Fn::Join": [
+            "-",
+            [
+              { "Ref": "ServiceName" },
+              { "Ref" : "AWS::Region" },
+              "deploy-policy"
+            ]
+          ]
+        },
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "cloudformation:CreateStack",
+                "cloudformation:CreateUploadBucket",
+                "cloudformation:DeleteStack",
+                "cloudformation:DescribeStackEvents",
+                "cloudformation:DescribeStackResource",
+                "cloudformation:DescribeStackResources",
+                "cloudformation:ListStackResources",
+                "cloudformation:UpdateStack",
+                "cloudformation:DescribeStacks",
+                "cloudformation:SetStackPolicy"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:cloudformation:",
+                      { "Ref": "AWS::Region" },
+                      ":",
+                      { "Ref": "AWS::AccountId" },
+                      ":stack/",
+                      { "Ref": "ServiceName" },
+                      "-",
+                      { "Ref": "Stage" },
+                      "/*"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:cloudformation:",
+                      { "Ref": "AWS::Region" },
+                      ":",
+                      { "Ref": "AWS::AccountId" },
+                      ":stack/",
+                      { "Ref": "ServiceName" },
+                      "-",
+                      { "Ref": "Stage" },
+                      "-*/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "s3:*"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:s3:::",
+                      { "Ref": "ServiceName" },
+                      "-",
+                      { "Ref": "AWS::Region" },
+                      "-deployment/*"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:s3:::",
+                      { "Ref": "ServiceName" },
+                      "-",
+                      { "Ref": "AWS::Region" },
+                      "-deployment"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "s3:*"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:s3:::",
+                      { "Ref": "ServiceName" },
+                      "-",
+                      { "Ref": "AWS::Region" },
+                      "-cloudtrail/*"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:s3:::",
+                      { "Ref": "ServiceName" },
+                      "-",
+                      { "Ref": "AWS::Region" },
+                      "-cloudtrail"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "cloudtrail:*"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:cloudtrail:",
+                      { "Ref": "AWS::Region" },
+                      ":",
+                      { "Ref": "AWS::AccountId" },
+                      ":trail/",
+                      { "Ref": "ServiceName" }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "lambda:*"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:lambda:",
+                      { "Ref": "AWS::Region" },
+                      ":",
+                      { "Ref": "AWS::AccountId" },
+                      ":function:",
+                      { "Ref": "ServiceName" },
+                      "-",
+                      { "Ref": "Stage" },
+                      "-*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "lambda:AddPermission"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:lambda:",
+                      { "Ref": "AWS::Region" },
+                      ":",
+                      { "Ref": "AWS::AccountId" },
+                      ":function:",
+                      { "Ref": "ServiceName" },
+                      "-",
+                      { "Ref": "Stage" },
+                      "-cloudTrailListener"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "iam:CreateRole",
+                "iam:DeleteRole",
+                "iam:PassRole",
+                "iam:DeleteRolePolicy",
+                "iam:PutRolePolicy",
+                "iam:AttachRolePolicy",
+                "iam:DetachRolePolicy"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:iam::",
+                      { "Ref": "AWS::AccountId" },
+                      ":role/",
+                      { "Ref": "ServiceName" },
+                      "-",
+                      { "Ref" : "AWS::Region" },
+                      "-lambda-role"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "iam:UpdateAssumeRolePolicy"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:iam::",
+                      { "Ref": "AWS::AccountId" },
+                      ":role/",
+                      { "Ref": "ServiceName" },
+                      "-*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "events:*",
+                "logs:*",
+                "cloudwatch:*",
+                "ec2:DescribeSecurityGroups",
+                "ec2:DescribeSubnets",
+                "ec2:DescribeVpcs",
+                "ec2:DescribeAccountAttributes",
+                "iam:GetUser",
+                "iam:GetRole",
+                "iam:AttachRolePolicy",
+                "cloudformation:ValidateTemplate",
+                "s3:ListAllMyBuckets",
+                "cloudtrail:DescribeTrails"
+              ],
+              "Resource": [
+                "*"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "ServerlessDeploymentGroup": {
+      "Type": "AWS::IAM::Group",
+      "Properties": {
+        "GroupName": {
+          "Fn::Join": [
+            "-",
+            [
+              { "Ref": "ServiceName" },
+              { "Ref" : "AWS::Region" },
+              "deploy-group"
+            ]
+          ]
+        },
+        "ManagedPolicyArns": [
+          { "Ref": "ServerlessDeploymentPolicy" }
+        ],
+        "Path": "/"
+      }
+    },
+    "FunctionalTestPolicy": {
+      "Type": "AWS::IAM::ManagedPolicy",
+      "Properties": {
+        "ManagedPolicyName": {
+          "Fn::Join": [
+            "-",
+            [
+              { "Ref": "ServiceName" },
+              { "Ref" : "AWS::Region" },
+              "tests-policy"
+            ]
+          ]
+        },
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "lambda:*"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:lambda:",
+                      { "Ref": "AWS::Region" },
+                      ":",
+                      { "Ref": "AWS::AccountId" },
+                      ":function:",
+                      { "Ref": "ServiceName" },
+                      "-*"
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "FunctionalTestGroup": {
+      "Type": "AWS::IAM::Group",
+      "Properties": {
+        "GroupName": {
+          "Fn::Join": [
+            "-",
+            [
+              { "Ref": "ServiceName" },
+              { "Ref" : "AWS::Region" },
+              "tests-group"
+            ]
+          ]
+        },
+        "ManagedPolicyArns": [
+          { "Ref": "FunctionalTestPolicy" }
+        ],
+        "Path": "/"
+      }
+    },
+    "ServerlessDeploymentS3Bucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": {
+          "Fn::Join" : [
+            "-",
+            [
+              { "Ref": "ServiceName" },
+              { "Ref" : "AWS::Region" },
+              "deployment"
+            ]
+          ]
+        },
+        "LifecycleConfiguration": {
+          "Rules": [
+            {
+              "Id": "RemovalRule",
+              "Status": "Enabled",
+              "ExpirationInDays": "30"
+            }
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "KeboolaStack",
+            "Value": { "Ref": "KeboolaStack" }
+          }
+        ]
+      }
+    }
+  }
+}
