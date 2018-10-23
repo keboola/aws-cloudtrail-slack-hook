@@ -1,0 +1,39 @@
+version: "2"
+
+services:
+
+  deploy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/code
+    working_dir: /code
+    environment:
+      - "AWS_ACCESS_KEY_ID=${DEV_DEPLOY_AWS_ACCESS_KEY_ID}"
+      - "AWS_SECRET_ACCESS_KEY=${DEV_DEPLOY_AWS_SECRET_ACCESS_KEY}"
+      - "KEBOOLA_STACK=aws-cloudtrail-slack-hook"
+      - "PAPERTRAIL_PORT=${DEV_PAPERTRAIL_PORT}"
+      - "REGION=${DEV_REGION}"
+      - "SERVICE_NAME=${DEV_SERVICE_NAME}"
+      - "SLACK_URL=${DEV_SLACK_URL}"
+      - "STAGE=dev"
+      - "WATCHED_EVENTS=${DEV_WATCHED_EVENTS}"
+    command: >
+             sh -c '
+             serverless deploy
+             '
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/code
+    working_dir: /code
+    environment:
+      - "SLACK_URL=${DEV_SLACK_URL}"
+    command: >
+             sh -c '
+             yarn test
+             '
