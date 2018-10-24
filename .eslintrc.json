@@ -3,11 +3,12 @@
     "airbnb-base"
   ],
   "plugins": [
-    "import"
+    "import",
+    "jest"
   ],
   "env": {
     "node": true,
-    "mocha": true
+    "jest/globals": true
   },
   "rules": {
     "strict": 0,

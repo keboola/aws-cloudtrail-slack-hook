@@ -29,6 +29,7 @@ provider:
   environment:
     SERVICE_NAME: ${env:SERVICE_NAME}
     SLACK_URL: ${env:SLACK_URL}
+    TIME_ZONE: ${env:TIME_ZONE}
     WATCHED_EVENTS: ${env:WATCHED_EVENTS}
 
 package:

@@ -18,6 +18,7 @@ services:
       - "SERVICE_NAME=${DEV_SERVICE_NAME}"
       - "SLACK_URL=${DEV_SLACK_URL}"
       - "STAGE=dev"
+      - "TIME_ZONE=${DEV_TIME_ZONE}"
       - "WATCHED_EVENTS=${DEV_WATCHED_EVENTS}"
     command: >
              sh -c '
