@@ -1,10 +1,12 @@
 import _ from 'lodash';
 import axios from 'axios';
+import moment from 'moment-timezone';
 
 export default class Slack {
-  constructor(url, username) {
+  constructor(url, username, timezone = 'UTC') {
     this.url = url;
     this.username = username;
+    this.timezone = timezone;
   }
 
   async send(event, time, userName, ip) {
@@ -37,7 +39,7 @@ export default class Slack {
             },
             {
               title: 'Event Time',
-              value: time,
+              value: moment(time).tz(this.timezone).format('YYYY-MM-DD HH:mm:ss'),
               short: true,
             },
             {
@@ -49,8 +51,6 @@ export default class Slack {
         },
       ],
     };
-    // eslint-disable-next-line no-console
-    console.log('OPTS', opts);
 
     await axios.request({
       method: 'post',
