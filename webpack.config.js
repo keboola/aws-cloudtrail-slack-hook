@@ -20,6 +20,7 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: ['@babel/env'],
+            plugins: ['@babel/plugin-transform-runtime'],
           },
         },
       },

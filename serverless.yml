@@ -1,7 +1,13 @@
 service: ${env:SERVICE_NAME}
 
 custom:
-  webpackIncludeModules: true
+  webpack:
+    webpackConfig: 'webpack.config.js'
+    includeModules:
+      forceExclude:
+      - aws-sdk
+      - serverless
+    packager: 'yarn'
   papertrail:
     port: ${env:PAPERTRAIL_PORT}
   cors:
@@ -40,12 +46,13 @@ package:
     - src/lib/**
     - node_modules/**
   exclude:
-    - .git/**
-    - .idea/**
     - .env
     - .eslintignore
     - .eslintrc.json
+    - .git/**
+    - .gitignore
     - .travis.yml
+    - cf-stack.json
     - docker-compose.yml
     - Dockerfile
     - LICENSE
