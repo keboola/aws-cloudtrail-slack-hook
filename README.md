@@ -20,3 +20,8 @@ The app creates a trail of CloudTrail events to a S3 bucket and a lambda functio
   - `DEV_TIME_ZONE` - Time zone for event times in Slack (e.g. `Europe/Prague`)
   - `DEV_WATCHED_EVENTS` Comma-separated list of events to watch (e.g. `ConsoleLogin,SwitchRole`)
 6. Run `docker-compose run --rm deploy`
+
+
+### Deployment
+
+Deployment to production is run automatically on Travis after push to master branch.
