@@ -11,44 +11,44 @@ before_install:
 - export ECR_TAG=stage-$TRAVIS_COMMIT
 
 jobs:
-      include:
-      - stage: install
-        before_script:
-        - eval $(docker run --rm -i -e AWS_ACCESS_KEY_ID=$ECR_AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$ECR_AWS_SECRET_ACCESS_KEY quay.io/keboola/aws-cli ecr get-login --region us-east-1 --no-include-email)
-        - docker build -t $ECR_REPOSITORY .
-        - docker tag $ECR_REPOSITORY:latest "${ECR_REGISTRY}:${ECR_TAG}"
-        - docker push "${ECR_REGISTRY}:${ECR_TAG}"
-        script: skip
-      - stage: lint
-        before_script:
-        - eval $(docker run --rm -i -e AWS_ACCESS_KEY_ID=$ECR_AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$ECR_AWS_SECRET_ACCESS_KEY quay.io/keboola/aws-cli ecr get-login --region us-east-1 --no-include-email)
-        - docker pull "${ECR_REGISTRY}:${ECR_TAG}"
-        script:
-        - docker run --rm "${ECR_REGISTRY}:${ECR_TAG}" yarn test:lint
-      - stage: tests
-        before_script:
-        - eval $(docker run --rm -i -e AWS_ACCESS_KEY_ID=$ECR_AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$ECR_AWS_SECRET_ACCESS_KEY quay.io/keboola/aws-cli ecr get-login --region us-east-1 --no-include-email)
-        - docker pull "${ECR_REGISTRY}:${ECR_TAG}"
-        script:
-        - docker run --rm
-          -e SLACK_URL
-          "${ECR_REGISTRY}:${ECR_TAG}" yarn test:unit
-      - stage: deploy
-        if: branch = master
-        before_script:
-        - eval $(docker run --rm -i -e AWS_ACCESS_KEY_ID=$ECR_AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$ECR_AWS_SECRET_ACCESS_KEY quay.io/keboola/aws-cli ecr get-login --region us-east-1 --no-include-email)
-        - docker pull "${ECR_REGISTRY}:${ECR_TAG}"
-        script:
-        - >-
-              docker run --rm
-              - "AWS_ACCESS_KEY_ID=${PROD_DEPLOY_AWS_ACCESS_KEY_ID}"
-              - "AWS_SECRET_ACCESS_KEY=${PROD_DEPLOY_AWS_SECRET_ACCESS_KEY}"
-              - "KEBOOLA_STACK=aws-cloudtrail-slack-hook"
-              - "PAPERTRAIL_PORT=${PROD_PAPERTRAIL_PORT}"
-              - "REGION=${PROD_REGION}"
-              - "SERVICE_NAME=${PROD_SERVICE_NAME}"
-              - "SLACK_URL=${PROD_SLACK_URL}"
-              - "STAGE=prod"
-              - "TIME_ZONE=${PROD_TIME_ZONE}"
-              - "WATCHED_EVENTS=${PROD_WATCHED_EVENTS}"
-              "${ECR_REGISTRY}:${ECR_TAG}" serverless deploy
+  include:
+  - stage: install
+    before_script:
+    - eval $(docker run --rm -i -e AWS_ACCESS_KEY_ID=$ECR_AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$ECR_AWS_SECRET_ACCESS_KEY quay.io/keboola/aws-cli ecr get-login --region us-east-1 --no-include-email)
+    - docker build -t $ECR_REPOSITORY .
+    - docker tag $ECR_REPOSITORY:latest "${ECR_REGISTRY}:${ECR_TAG}"
+    - docker push "${ECR_REGISTRY}:${ECR_TAG}"
+    script: skip
+  - stage: lint
+    before_script:
+    - eval $(docker run --rm -i -e AWS_ACCESS_KEY_ID=$ECR_AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$ECR_AWS_SECRET_ACCESS_KEY quay.io/keboola/aws-cli ecr get-login --region us-east-1 --no-include-email)
+    - docker pull "${ECR_REGISTRY}:${ECR_TAG}"
+    script:
+    - docker run --rm "${ECR_REGISTRY}:${ECR_TAG}" yarn test:lint
+  - stage: tests
+    before_script:
+    - eval $(docker run --rm -i -e AWS_ACCESS_KEY_ID=$ECR_AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$ECR_AWS_SECRET_ACCESS_KEY quay.io/keboola/aws-cli ecr get-login --region us-east-1 --no-include-email)
+    - docker pull "${ECR_REGISTRY}:${ECR_TAG}"
+    script:
+    - docker run --rm
+      -e SLACK_URL
+      "${ECR_REGISTRY}:${ECR_TAG}" yarn test:unit
+  - stage: deploy
+    if: branch = master
+    before_script:
+    - eval $(docker run --rm -i -e AWS_ACCESS_KEY_ID=$ECR_AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$ECR_AWS_SECRET_ACCESS_KEY quay.io/keboola/aws-cli ecr get-login --region us-east-1 --no-include-email)
+    - docker pull "${ECR_REGISTRY}:${ECR_TAG}"
+    script:
+    - >-
+      docker run --rm
+      - "AWS_ACCESS_KEY_ID=${PROD_DEPLOY_AWS_ACCESS_KEY_ID}"
+      - "AWS_SECRET_ACCESS_KEY=${PROD_DEPLOY_AWS_SECRET_ACCESS_KEY}"
+      - "KEBOOLA_STACK=aws-cloudtrail-slack-hook"
+      - "PAPERTRAIL_PORT=${PROD_PAPERTRAIL_PORT}"
+      - "REGION=${PROD_REGION}"
+      - "SERVICE_NAME=${PROD_SERVICE_NAME}"
+      - "SLACK_URL=${PROD_SLACK_URL}"
+      - "STAGE=prod"
+      - "TIME_ZONE=${PROD_TIME_ZONE}"
+      - "WATCHED_EVENTS=${PROD_WATCHED_EVENTS}"
+      "${ECR_REGISTRY}:${ECR_TAG}" serverless deploy
