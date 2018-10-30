@@ -545,6 +545,12 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
+"@keboola/eslint-config-node@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@keboola/eslint-config-node/-/eslint-config-node-1.0.1.tgz#16878384e7dae7acbb4fc4150b5771f7fa8c352f"
+  dependencies:
+    eslint-config-airbnb-base "^13.1.0"
+
 "@keboola/middy-error-logger@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@keboola/middy-error-logger/-/middy-error-logger-1.0.1.tgz#1ecbd22b7dc16ec8be28221b4688855c4ed0499c"
