@@ -1,6 +1,6 @@
 {
   "extends": [
-    "airbnb-base"
+    "@keboola/node"
   ],
   "plugins": [
     "import",
@@ -9,25 +9,5 @@
   "env": {
     "node": true,
     "jest/globals": true
-  },
-  "rules": {
-    "strict": 0,
-    "import/no-extraneous-dependencies": 0,
-    "max-len": ["error", {
-      "code": 120,
-      "ignoreComments": true,
-      "ignoreTrailingComments": true,
-      "ignoreUrls": true,
-      "ignoreStrings": true,
-      "ignoreTemplateLiterals": true,
-      "ignoreRegExpLiterals": true
-    }],
-    "comma-dangle": ["error", {
-      "arrays": "always-multiline",
-      "objects": "always-multiline",
-      "imports": "always-multiline",
-      "exports": "always-multiline",
-      "functions": "ignore"
-    }]
   }
 }
