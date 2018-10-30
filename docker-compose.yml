@@ -25,6 +25,29 @@ services:
              serverless deploy
              '
 
+  deploy-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+    - .:/code
+    working_dir: /code
+    environment:
+    - "AWS_ACCESS_KEY_ID=${PROD_DEPLOY_AWS_ACCESS_KEY_ID}"
+    - "AWS_SECRET_ACCESS_KEY=${PROD_DEPLOY_AWS_SECRET_ACCESS_KEY}"
+    - "KEBOOLA_STACK=aws-cloudtrail-slack-hook"
+    - "PAPERTRAIL_PORT=${PROD_PAPERTRAIL_PORT}"
+    - "REGION=${PROD_REGION}"
+    - "SERVICE_NAME=${PROD_SERVICE_NAME}"
+    - "SLACK_URL=${PROD_SLACK_URL}"
+    - "STAGE=prod"
+    - "TIME_ZONE=${PROD_TIME_ZONE}"
+    - "WATCHED_EVENTS=${PROD_WATCHED_EVENTS}"
+    command: >
+      sh -c '
+      serverless deploy
+      '
+
   test:
     build:
       context: .

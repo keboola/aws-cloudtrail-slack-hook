@@ -80,7 +80,7 @@ resources:
         NotificationConfiguration:
           LambdaConfigurations:
           - Event: s3:ObjectCreated:*
-            Function: { 'Fn::Join': ['', ['arn:aws:lambda:${env:REGION}:', { Ref: 'AWS::AccountId' }, ':function:${env:SERVICE_NAME}-${env:STAGE}-cloudTrailListener']] }
+            Function: { 'Fn::GetAtt': ['CloudTrailListenerLambdaFunction', 'Arn'] }
         LifecycleConfiguration:
           Rules:
           - ExpirationInDays: 7
@@ -126,7 +126,7 @@ resources:
       Type: AWS::Lambda::Permission
       Properties:
         Action: lambda:InvokeFunction
-        FunctionName: { 'Fn::Join': ['', ['arn:aws:lambda:${env:REGION}:', { Ref: 'AWS::AccountId' }, ':function:${env:SERVICE_NAME}-${env:STAGE}-cloudTrailListener']] }
+        FunctionName: { 'Fn::GetAtt': ['CloudTrailListenerLambdaFunction', 'Arn'] }
         Principal: s3.amazonaws.com
         SourceAccount: { 'Ref': 'AWS::AccountId' }
         SourceArn: 'arn:aws:s3:::${env:SERVICE_NAME}-${env:REGION}-cloudtrail'

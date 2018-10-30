@@ -10,10 +10,11 @@ export default class App {
   async execute(event) {
     const logFiles = event.Records.map(e => ({ Bucket: e.s3.bucket.name, Key: e.s3.object.key }));
     const eventsToSend = await this.collectAndFilterEvents(logFiles);
+
     return Promise.all(_.map(eventsToSend, e => this.slack.send(
       e.eventName,
       e.eventTime,
-      e.userIdentity.userName,
+      _.get(e, 'userIdentity.principalId', _.get(e, 'userIdentity.arn', e.userIdentity.userName)),
       e.sourceIPAddress
     )));
   }
