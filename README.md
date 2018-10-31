@@ -24,4 +24,12 @@ The app creates a trail of CloudTrail events to a S3 bucket and a lambda functio
 
 ### Deployment
 
-Deployment to production is run automatically on Travis after push to master branch.
+Deployment to production is run automatically on Travis after push to master branch. These env vars are set:
+- `PROD_DEPLOY_AWS_ACCESS_KEY_ID` - iam credentials of deploy user
+- `PROD_DEPLOY_AWS_SECRET_ACCESS_KEY` - iam credentials of deploy user
+- `PROD_PAPERTRAIL_PORT` - port of Papertrail service for logging
+- `PROD_REGION` - aws region
+- `PROD_SERVICE_NAME` - service name (set to `aws-cloudtrail-slack-hook`)
+- `PROD_SLACK_URL` - url of Slack incoming webhook
+- `PROD_TIME_ZONE` - time zone for event times (set to `Europe/Prague`)
+- `PROD_WATCHED_EVENTS` - comma-separated list of watched events
