@@ -385,15 +385,6 @@
             ]
           ]
         },
-        "LifecycleConfiguration": {
-          "Rules": [
-            {
-              "Id": "RemovalRule",
-              "Status": "Enabled",
-              "ExpirationInDays": "30"
-            }
-          ]
-        },
         "Tags": [
           {
             "Key": "KeboolaStack",
