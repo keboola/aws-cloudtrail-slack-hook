@@ -10,22 +10,13 @@ custom:
     packager: 'yarn'
   papertrail:
     port: ${env:PAPERTRAIL_PORT}
-  cors:
-    origin: '*'
-    headers:
-    - Content-Type
-    - X-StorageApi-Token
-    - X-Amz-Date
-    - X-Amz-Security-Token
-    - X-Amz-User-Agent
-    allowCredentials: false
 
 provider:
   name: aws
   runtime: nodejs8.10
   region: ${env:REGION}
   stage: ${env:STAGE}
-  timeout: 20
+  timeout: 30
   role: lambdaRole
   versionFunctions: false
   deploymentBucket:
@@ -40,26 +31,6 @@ provider:
 
 package:
   individually: true
-  include:
-    - src/app/**
-    - src/lambda.js
-    - src/lib/**
-    - node_modules/**
-  exclude:
-    - .env
-    - .eslintignore
-    - .eslintrc.json
-    - .git/**
-    - .gitignore
-    - .travis.yml
-    - cf-stack.json
-    - docker-compose.yml
-    - Dockerfile
-    - LICENSE
-    - README.md
-    - package.json
-    - yarn.lock
-    - test/**
 
 plugins:
   - '@keboola/serverless-papertrail-logging'
