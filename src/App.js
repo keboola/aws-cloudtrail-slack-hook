@@ -32,10 +32,13 @@ export default class App {
     console.log(`Processing ${logFile} ..`);
     const log = await this.s3Download.retrieveAndUnGzipLog(logFile);
     if (log.Records && _.isArray(log.Records)) {
-      return Promise.resolve(_.filter(log.Records, event => this.shouldLogEvent(event)))
-        .then(() => console.log(`Log ${logFile} processed with ${_.size(log.Records)} records`));
+      return new Promise(async (res) => {
+        const filteredRecords = _.filter(log.Records, event => this.shouldLogEvent(event));
+        console.log(`Log ${JSON.stringify(logFile)} processed with ${_.size(filteredRecords)} records`);
+        res(filteredRecords);
+      });
     }
-    console.log(`Log ${logFile} processed with 0 records`);
+    console.log(`Log ${JSON.stringify(logFile)} processed with 0 records`);
     return Promise.resolve([]);
   }
 
