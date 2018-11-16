@@ -16,7 +16,7 @@ provider:
   runtime: nodejs8.10
   region: ${env:REGION}
   stage: ${env:STAGE}
-  timeout: 30
+  timeout: 60
   role: lambdaRole
   versionFunctions: false
   deploymentBucket:
