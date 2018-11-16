@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import _ from 'lodash';
 
 export default class App {
@@ -9,6 +10,7 @@ export default class App {
 
   async execute(event) {
     const logFiles = event.Records.map(e => ({ Bucket: e.s3.bucket.name, Key: e.s3.object.key }));
+    console.log('Log files to process:', JSON.stringify(logFiles));
     const eventsToSend = await this.collectAndFilterEvents(logFiles);
 
     return Promise.all(_.map(eventsToSend, e => this.slack.send(
@@ -26,14 +28,15 @@ export default class App {
     return _.flatten(promisesResult);
   }
 
-  getAndFilterLogFile(logFile) {
-    return this.s3Download.retrieveAndUnGzipLog(logFile)
-      .then((log) => {
-        if (log.Records && _.isArray(log.Records)) {
-          return Promise.resolve(_.filter(log.Records, event => this.shouldLogEvent(event)));
-        }
-        return Promise.resolve([]);
-      });
+  async getAndFilterLogFile(logFile) {
+    console.log(`Processing ${logFile} ..`);
+    const log = await this.s3Download.retrieveAndUnGzipLog(logFile);
+    if (log.Records && _.isArray(log.Records)) {
+      return Promise.resolve(_.filter(log.Records, event => this.shouldLogEvent(event)))
+        .then(() => console.log(`Log ${logFile} processed with ${_.size(log.Records)} records`));
+    }
+    console.log(`Log ${logFile} processed with 0 records`);
+    return Promise.resolve([]);
   }
 
   shouldLogEvent(event) {
