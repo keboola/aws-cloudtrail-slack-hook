@@ -13,7 +13,6 @@ The app creates a trail of CloudTrail events to a S3 bucket and a lambda functio
 5. Create `.env` file with following variables:
   - `DEV_DEPLOY_AWS_ACCESS_KEY_ID` - AWS Access Key Id for the user created in step 3
   - `DEV_DEPLOY_AWS_SECRET_ACCESS_KEY` - AWS Secret Key for the user created in step 3
-  - `DEV_PAPERTRAIL_PORT` - Papertrail port
   - `DEV_REGION` - AWS region
   - `DEV_SERVICE_NAME` - Service name, should be unique (e.g. `dev-aws-cloudtrail-slack-hook`)
   - `DEV_SLACK_URL` - Url of Slack incoming webhook
@@ -27,7 +26,6 @@ The app creates a trail of CloudTrail events to a S3 bucket and a lambda functio
 Deployment to production is run automatically on Travis after push to master branch. These env vars are set:
 - `PROD_DEPLOY_AWS_ACCESS_KEY_ID` - iam credentials of deploy user
 - `PROD_DEPLOY_AWS_SECRET_ACCESS_KEY` - iam credentials of deploy user
-- `PROD_PAPERTRAIL_PORT` - port of Papertrail service for logging
 - `PROD_REGION` - aws region
 - `PROD_SERVICE_NAME` - service name (set to `aws-cloudtrail-slack-hook`)
 - `PROD_SLACK_URL` - url of Slack incoming webhook

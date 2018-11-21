@@ -24,7 +24,6 @@
     "@babel/preset-env": "^7.1.0",
     "@babel/register": "^7.0.0",
     "@keboola/eslint-config-node": "^1.0.1",
-    "@keboola/serverless-papertrail-logging": "^1.0.4",
     "aws-sdk": "^2.188.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",

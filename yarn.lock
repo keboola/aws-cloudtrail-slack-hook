@@ -557,15 +557,6 @@
   dependencies:
     lodash "^4.17.10"
 
-"@keboola/serverless-papertrail-logging@^1.0.4":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@keboola/serverless-papertrail-logging/-/serverless-papertrail-logging-1.1.1.tgz#d5dabc7a66cd3bdb08d8bea9f7c9128707a8956f"
-  dependencies:
-    lodash "^4.17.4"
-    winston "^2.4.0"
-    winston-papertrail "^1.0.5"
-    zlib "^1.0.5"
-
 "@serverless/platform-sdk@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@serverless/platform-sdk/-/platform-sdk-0.3.0.tgz#335adeb2759760e4232c321d72b4022e4dce7818"
@@ -1002,10 +993,6 @@ async@^2.0.0, async@^2.1.4, async@^2.5.0:
   resolved "https://registry.yarnpkg.com/async/-/async-2.6.1.tgz#b245a23ca71930044ec53fa46aa00a3e87c6a610"
   dependencies:
     lodash "^4.17.10"
-
-async@~1.0.0:
-  version "1.0.0"
-  resolved "http://registry.npmjs.org/async/-/async-1.0.0.tgz#f8fc04ca3a13784ade9e1641af98578cfbd647a9"
 
 asynckit@^0.4.0:
   version "0.4.0"
@@ -1679,10 +1666,6 @@ color-name@1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.3.tgz#a7d0558bd89c42f795dd42328f740831ca53bc25"
 
-colors@1.0.x:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/colors/-/colors-1.0.3.tgz#0433f44d809680fdeb60ed260f1b0c262e82a40b"
-
 combined-stream@^1.0.6, combined-stream@~1.0.6:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/combined-stream/-/combined-stream-1.0.7.tgz#2d1d24317afb8abe95d6d2c0b07b57813539d828"
@@ -1923,10 +1906,6 @@ cssstyle@^1.0.0:
   resolved "https://registry.yarnpkg.com/cssstyle/-/cssstyle-1.1.1.tgz#18b038a9c44d65f7a8e428a653b9f6fe42faf5fb"
   dependencies:
     cssom "0.3.x"
-
-cycle@1.0.x:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/cycle/-/cycle-1.0.3.tgz#21e80b2be8580f98b468f379430662b046c34ad2"
 
 cyclist@~0.2.2:
   version "0.2.2"
@@ -2614,10 +2593,6 @@ extsprintf@^1.2.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
 
-eyes@0.1.x:
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/eyes/-/eyes-0.1.8.tgz#62cf120234c683785d902348a800ef3e0cc20bc0"
-
 fast-deep-equal@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-1.1.0.tgz#c053477817c86b51daa853c81e059b733d023614"
@@ -3005,10 +2980,6 @@ globby@^6.1.0:
     object-assign "^4.0.1"
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
-
-glossy@^0.1.7:
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/glossy/-/glossy-0.1.7.tgz#769b5984a96f6066ab9ea758224825ee6c210f0b"
 
 got@^6.3.0, got@^6.7.1:
   version "6.7.1"
@@ -3626,7 +3597,7 @@ isomorphic-fetch@^2.2.1:
     node-fetch "^1.0.1"
     whatwg-fetch ">=0.10.0"
 
-isstream@0.1.x, isstream@~0.1.2:
+isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
 
@@ -5913,10 +5884,6 @@ stack-trace@0.0.9:
   version "0.0.9"
   resolved "https://registry.yarnpkg.com/stack-trace/-/stack-trace-0.0.9.tgz#a8f6eaeca90674c333e7c43953f275b451510695"
 
-stack-trace@0.0.x:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/stack-trace/-/stack-trace-0.0.10.tgz#547c70b347e8d32b4e108ea1a2a159e5fdde19c0"
-
 stack-utils@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/stack-utils/-/stack-utils-1.0.1.tgz#d4f33ab54e8e38778b0ca5cfd3b3afb12db68620"
@@ -6669,23 +6636,6 @@ widest-line@^2.0.0:
   dependencies:
     string-width "^2.1.1"
 
-winston-papertrail@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/winston-papertrail/-/winston-papertrail-1.0.5.tgz#54a23b16e5046652bf687b37dc802714bfd462c9"
-  dependencies:
-    glossy "^0.1.7"
-
-winston@^2.4.0:
-  version "2.4.4"
-  resolved "https://registry.yarnpkg.com/winston/-/winston-2.4.4.tgz#a01e4d1d0a103cf4eada6fc1f886b3110d71c34b"
-  dependencies:
-    async "~1.0.0"
-    colors "1.0.x"
-    cycle "1.0.x"
-    eyes "0.1.x"
-    isstream "0.1.x"
-    stack-trace "0.0.x"
-
 wordwrap@~0.0.2:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/wordwrap/-/wordwrap-0.0.3.tgz#a3d5da6cd5c0bc0008d37234bbaf1bed63059107"
@@ -6816,7 +6766,3 @@ zip-stream@^1.1.0, zip-stream@^1.2.0:
     compress-commons "^1.2.0"
     lodash "^4.8.0"
     readable-stream "^2.0.0"
-
-zlib@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/zlib/-/zlib-1.0.5.tgz#6e7c972fc371c645a6afb03ab14769def114fcc0"
