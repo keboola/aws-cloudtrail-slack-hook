@@ -25,11 +25,7 @@
     "ServerlessDeploymentPolicy": {
       "Type": "AWS::IAM::ManagedPolicy",
       "Properties": {
-        "ManagedPolicyName": { "Fn::Join": ["-", [
-          { "Ref": "ServiceName" },
-          { "Ref" : "AWS::Region" },
-          "deploy"
-        ]] },
+        "ManagedPolicyName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-deploy" },
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
@@ -48,28 +44,8 @@
                 "cloudformation:SetStackPolicy"
               ],
               "Resource": [
-                { "Fn::Join": ["", [
-                  "arn:aws:cloudformation:",
-                  { "Ref": "AWS::Region" },
-                  ":",
-                  { "Ref": "AWS::AccountId" },
-                  ":stack/",
-                  { "Ref": "ServiceName" },
-                  "-",
-                  { "Ref": "Stage" },
-                  "/*"
-                ]]},
-                { "Fn::Join": ["", [
-                  "arn:aws:cloudformation:",
-                  { "Ref": "AWS::Region" },
-                  ":",
-                  { "Ref": "AWS::AccountId" },
-                  ":stack/",
-                  { "Ref": "ServiceName" },
-                  "-",
-                  { "Ref": "Stage" },
-                  "-*/*"
-                ]] }
+                { "Fn::Sub": "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${ServiceName}-${Stage}/*" },
+                { "Fn::Sub": "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${ServiceName}-${Stage}-*/*" }
               ]
             },
             {
@@ -87,20 +63,8 @@
                 "s3:*"
               ],
               "Resource": [
-                { "Fn::Join": ["", [
-                  "arn:aws:s3:::",
-                  { "Ref": "ServiceName" },
-                  "-",
-                  { "Ref": "AWS::Region" },
-                  "-deployment/*"
-                ]] },
-                { "Fn::Join": ["", [
-                  "arn:aws:s3:::",
-                  { "Ref": "ServiceName" },
-                  "-",
-                  { "Ref": "AWS::Region" },
-                  "-deployment"
-                ]] }
+                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-deployment" },
+                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-deployment/*" }
               ]
             },
             {
@@ -120,11 +84,7 @@
     "ServerlessCloudFormationRole": {
       "Type": "AWS::IAM::Role",
       "Properties": {
-        "RoleName": { "Fn::Join": ["-", [
-          { "Ref": "ServiceName" },
-          { "Ref": "AWS::Region" },
-          "sls-cf"
-        ]] },
+        "RoleName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-sls-cf" },
         "AssumeRolePolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
@@ -150,15 +110,8 @@
     "ServerlessCloudFormationPolicy": {
       "Type": "AWS::IAM::ManagedPolicy",
       "Properties": {
-        "ManagedPolicyName": { "Fn::Join": ["-", [
-          { "Ref": "ServiceName" },
-          { "Ref": "AWS::Region" },
-          "sls-cf"
-        ]] },
-        "Description": { "Fn::Join": [" - ", [
-          { "Ref": "KeboolaStack" },
-          "CloudFormation Resources"
-        ]] },
+        "ManagedPolicyName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-sls-cf" },
+        "Description": { "Fn::Sub": "${KeboolaStack} - CloudFormation Resources" },
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
@@ -169,16 +122,8 @@
                 "s3:GetObjectVersion"
               ],
               "Resource": [
-                { "Fn::Join": ["", [
-                  "arn:aws:s3:::",
-                  { "Ref": "ServiceName" },
-                  "-*/*"
-                ]] },
-                { "Fn::Join": ["", [
-                  "arn:aws:s3:::",
-                  { "Ref": "ServiceName" },
-                  "-*"
-                ]] }
+                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-*" },
+                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-*/*" }
               ]
             },
             {
@@ -187,17 +132,7 @@
                 "lambda:*"
               ],
               "Resource": [
-                { "Fn::Join": ["", [
-                  "arn:aws:lambda:",
-                  { "Ref": "AWS::Region" },
-                  ":",
-                  { "Ref": "AWS::AccountId" },
-                  ":function:",
-                  { "Ref": "ServiceName" },
-                  "-",
-                  { "Ref": "Stage" },
-                  "-*"
-                ]] }
+                { "Fn::Sub": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${ServiceName}-${Stage}-*" }
               ]
             },
             {
@@ -216,15 +151,7 @@
                 "logs:*"
               ],
               "Resource": [
-                { "Fn::Join": ["", [
-                  "arn:aws:logs:",
-                  { "Ref": "AWS::Region" },
-                  ":",
-                  { "Ref": "AWS::AccountId" },
-                  ":log-group:/aws/lambda/",
-                  { "Ref": "ServiceName" },
-                  "*"
-                ]] }
+                { "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${ServiceName}*" }
               ]
             },
             {
@@ -242,21 +169,8 @@
                 "s3:*"
               ],
               "Resource": [
-                {
-                  "Fn::Join": ["", [
-                  "arn:aws:s3:::",
-                  { "Ref": "ServiceName" },
-                  "-",
-                  { "Ref": "AWS::Region" },
-                  "-cloudtrail/*"
-                ]] },
-                { "Fn::Join": ["", [
-                  "arn:aws:s3:::",
-                  { "Ref": "ServiceName" },
-                  "-",
-                  { "Ref": "AWS::Region" },
-                  "-cloudtrail"
-                ]] }
+                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-cloudtrail" },
+                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-cloudtrail/*" }
               ]
             },
             {
@@ -265,14 +179,7 @@
                 "cloudtrail:*"
               ],
               "Resource": [
-                { "Fn::Join": ["", [
-                  "arn:aws:cloudtrail:",
-                  { "Ref": "AWS::Region" },
-                  ":",
-                  { "Ref": "AWS::AccountId" },
-                  ":trail/",
-                  { "Ref": "ServiceName" }
-                ]] }
+                { "Fn::Sub": "arn:aws:cloudtrail:${AWS::Region}:${AWS::AccountId}:trail/${ServiceName}" }
               ]
             },
             {
@@ -282,17 +189,7 @@
                 "lambda:RemovePermission"
               ],
               "Resource": [
-                { "Fn::Join": ["", [
-                  "arn:aws:lambda:",
-                  { "Ref": "AWS::Region" },
-                  ":",
-                  { "Ref": "AWS::AccountId" },
-                  ":function:",
-                  { "Ref": "ServiceName" },
-                  "-",
-                  { "Ref": "Stage" },
-                  "-cloudTrailListener"
-                ]] }
+                { "Fn::Sub": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${ServiceName}-${Stage}-cloudTrailListener" }
               ]
             }
           ]
@@ -302,11 +199,7 @@
     "ServerlessLambdaExecutionRole": {
       "Type": "AWS::IAM::Role",
       "Properties": {
-        "RoleName": { "Fn::Join": ["-", [
-          { "Ref": "ServiceName" },
-          { "Ref": "AWS::Region" },
-          "sls-exec"
-        ]] },
+        "RoleName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-sls-exec" },
         "AssumeRolePolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
@@ -327,10 +220,7 @@
         "ManagedPolicyArns": [],
         "Policies": [
           {
-            "PolicyName": { "Fn::Join": ["", [
-              { "Ref": "ServiceName" },
-              "-lambda-exec"
-            ]] },
+            "PolicyName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-sls-exec" },
             "PolicyDocument": {
               "Version": "2012-10-17",
               "Statement": [
@@ -339,12 +229,7 @@
                   "Action": [
                     "logs:*"
                   ],
-                  "Resource": { "Fn::Join": [":",[
-                    "arn:aws:logs",
-                    { "Ref": "AWS::Region" },
-                    { "Ref": "AWS::AccountId" },
-                    "log-group:/aws/lambda/*:*:*"
-                  ]] }
+                  "Resource": { "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*:*:*" }
                 },
                 {
                   "Effect": "Allow",
@@ -364,20 +249,8 @@
                     "s3:ListBucket"
                   ],
                   "Resource": [
-                    { "Fn::Join": ["", [
-                      "arn:aws:s3:::",
-                      { "Ref": "ServiceName" },
-                      "-",
-                      { "Ref": "AWS::Region" },
-                      "-cloudtrail/*"
-                    ]] },
-                    { "Fn::Join": ["", [
-                      "arn:aws:s3:::",
-                      { "Ref": "ServiceName" },
-                      "-",
-                      { "Ref": "AWS::Region" },
-                      "-cloudtrail"
-                    ]] }
+                    { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-cloudtrail" },
+                    { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-cloudtrail/*" }
                   ]
                 }
               ]
@@ -389,16 +262,7 @@
     "ServerlessDeploymentGroup": {
       "Type": "AWS::IAM::Group",
       "Properties": {
-        "GroupName": {
-          "Fn::Join": [
-            "-",
-            [
-              { "Ref": "ServiceName" },
-              { "Ref" : "AWS::Region" },
-              "deploy-group"
-            ]
-          ]
-        },
+        "GroupName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-deploy-group" },
         "ManagedPolicyArns": [
           { "Ref": "ServerlessDeploymentPolicy" }
         ],
@@ -408,11 +272,7 @@
     "ServerlessDeploymentS3Bucket": {
       "Type": "AWS::S3::Bucket",
       "Properties": {
-        "BucketName": { "Fn::Join" : ["-", [
-          { "Ref": "ServiceName" },
-          { "Ref" : "AWS::Region" },
-          "deployment"
-        ]] },
+        "BucketName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-deployment" },
         "Tags": [
           {
             "Key": "KeboolaStack",
