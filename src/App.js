@@ -29,7 +29,7 @@ export default class App {
   }
 
   async getAndFilterLogFile(logFile) {
-    console.log(`Processing ${logFile} ..`);
+    console.log(`Processing ${JSON.stringify(logFile)} ..`);
     const log = await this.s3Download.retrieveAndUnGzipLog(logFile);
     if (log.Records && _.isArray(log.Records)) {
       return new Promise(async (res) => {

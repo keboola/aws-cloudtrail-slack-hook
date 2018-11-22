@@ -23,12 +23,14 @@ jobs:
     - docker tag $ECR_REPOSITORY:latest "${ECR_REGISTRY}:${ECR_TAG}"
     - docker push "${ECR_REGISTRY}:${ECR_TAG}"
     script: skip
+
   - stage: lint
     before_script:
     - eval $(docker run --rm -i -e AWS_ACCESS_KEY_ID=$ECR_AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$ECR_AWS_SECRET_ACCESS_KEY quay.io/keboola/aws-cli ecr get-login --region us-east-1 --no-include-email)
     - docker pull "${ECR_REGISTRY}:${ECR_TAG}"
     script:
     - docker run --rm "${ECR_REGISTRY}:${ECR_TAG}" yarn test:lint
+
   - stage: tests
     before_script:
     - eval $(docker run --rm -i -e AWS_ACCESS_KEY_ID=$ECR_AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$ECR_AWS_SECRET_ACCESS_KEY quay.io/keboola/aws-cli ecr get-login --region us-east-1 --no-include-email)
@@ -37,6 +39,7 @@ jobs:
     - docker run --rm
       -e SLACK_URL
       "${ECR_REGISTRY}:${ECR_TAG}" yarn test:unit
+
   - stage: deploy
     if: branch = master AND type = push
     before_script:
@@ -47,6 +50,8 @@ jobs:
       docker run --rm
       -e "AWS_ACCESS_KEY_ID=${PROD_DEPLOY_AWS_ACCESS_KEY_ID}"
       -e "AWS_SECRET_ACCESS_KEY=${PROD_DEPLOY_AWS_SECRET_ACCESS_KEY}"
+      -e "CLOUDFORMATION_ROLE_ARN=${PROD_CLOUDFORMATION_ROLE_ARN}"
+      -e "LAMBDA_EXECUTION_ROLE_ARN=${PROD_LAMBDA_EXECUTION_ROLE_ARN}"
       -e "KEBOOLA_STACK=aws-cloudtrail-slack-hook"
       -e "REGION=${PROD_REGION}"
       -e "SERVICE_NAME=${PROD_SERVICE_NAME}"
