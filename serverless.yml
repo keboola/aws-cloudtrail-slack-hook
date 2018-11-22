@@ -8,8 +8,6 @@ custom:
       - aws-sdk
       - serverless
     packager: 'yarn'
-  papertrail:
-    port: ${env:PAPERTRAIL_PORT}
 
 provider:
   name: aws
@@ -33,7 +31,6 @@ package:
   individually: true
 
 plugins:
-  - '@keboola/serverless-papertrail-logging'
   - serverless-webpack
 
 functions:
