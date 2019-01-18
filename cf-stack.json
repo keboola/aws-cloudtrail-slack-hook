@@ -273,6 +273,15 @@
       "Type": "AWS::S3::Bucket",
       "Properties": {
         "BucketName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-deployment" },
+        "LifecycleConfiguration": {
+          "Rules": [
+            {
+              "Id": "RemovalRule",
+              "Status": "Enabled",
+              "ExpirationInDays": "30"
+            }
+          ]
+        },
         "Tags": [
           {
             "Key": "KeboolaStack",
