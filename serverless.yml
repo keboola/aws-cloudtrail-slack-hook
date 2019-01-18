@@ -52,7 +52,7 @@ resources:
             Function: { 'Fn::GetAtt': ['CloudTrailListenerLambdaFunction', 'Arn'] }
         LifecycleConfiguration:
           Rules:
-          - ExpirationInDays: 7
+          - ExpirationInDays: 1095
             Status: Enabled
         Tags:
         - Key: 'KeboolaStack'
