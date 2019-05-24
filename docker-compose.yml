@@ -6,6 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: keboola/aws-cloudtrail-slack-hook
     volumes:
       - .:/code
     working_dir: /code
@@ -21,10 +22,7 @@ services:
       - "STAGE=dev"
       - "TIME_ZONE=${DEV_TIME_ZONE}"
       - "WATCHED_EVENTS=${DEV_WATCHED_EVENTS}"
-    command: >
-             sh -c '
-             serverless deploy
-             '
+    command: serverless deploy
 
   deploy-prod:
     build:
@@ -45,21 +43,13 @@ services:
     - "STAGE=prod"
     - "TIME_ZONE=${PROD_TIME_ZONE}"
     - "WATCHED_EVENTS=${PROD_WATCHED_EVENTS}"
-    command: >
-      sh -c '
-      serverless deploy
-      '
+    command: serverless deploy
 
   test:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: keboola/aws-cloudtrail-slack-hook
     volumes:
       - .:/code
     working_dir: /code
     environment:
       - "SLACK_URL=${DEV_SLACK_URL}"
-    command: >
-             sh -c '
-             yarn test
-             '
+    command: yarn test
