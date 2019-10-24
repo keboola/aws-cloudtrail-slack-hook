@@ -12,11 +12,12 @@ install();
 process.env.BLUEBIRD_LONG_STACK_TRACES = 1;
 global.Promise = bluebird;
 
-const handlerFunction = async (event) => {
+const handlerFunction = async (event, context) => {
   const app = new App(
     new Slack(process.env.SLACK_URL, process.env.SERVICE_NAME, process.env.TIME_ZONE),
     new S3Download(new aws.S3()),
-    process.env.WATCHED_EVENTS.split(',')
+    process.env.WATCHED_EVENTS.split(','),
+    context.awsRequestId
   );
   const res = await app.execute(event);
   return Promise.resolve({ statusCode: 200, body: JSON.stringify(res) });
