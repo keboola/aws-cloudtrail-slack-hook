@@ -2,15 +2,24 @@
 import _ from 'lodash';
 
 export default class App {
-  constructor(slack, s3Download, watchedEvents) {
+  constructor(slack, s3Download, watchedEvents, requestId) {
     this.s3Download = s3Download;
     this.slack = slack;
     this.watchedEvents = watchedEvents;
+    this.requestId = requestId;
+  }
+
+  log(event, files) {
+    console.log(JSON.stringify({
+      event,
+      files,
+      requestId: this.requestId,
+    }));
   }
 
   async execute(event) {
     const logFiles = event.Records.map(e => ({ Bucket: e.s3.bucket.name, Key: e.s3.object.key }));
-    console.log('Log files to process:', JSON.stringify(logFiles));
+    this.log('Files to process', logFiles);
     const eventsToSend = await this.collectAndFilterEvents(logFiles);
 
     return Promise.all(_.map(eventsToSend, e => this.slack.send(
@@ -29,16 +38,17 @@ export default class App {
   }
 
   async getAndFilterLogFile(logFile) {
+    this.log('Processing file', logFile);
     console.log(`Processing ${JSON.stringify(logFile)} ..`);
     const log = await this.s3Download.retrieveAndUnGzipLog(logFile);
     if (log.Records && _.isArray(log.Records)) {
       return new Promise(async (res) => {
         const filteredRecords = _.filter(log.Records, event => this.shouldLogEvent(event));
-        console.log(`Log ${JSON.stringify(logFile)} processed with ${_.size(filteredRecords)} records`);
+        this.log(`File processed with ${_.size(filteredRecords)} records`, logFile);
         res(filteredRecords);
       });
     }
-    console.log(`Log ${JSON.stringify(logFile)} processed with 0 records`);
+    this.log(`File processed with 0 records`, logFile);
     return Promise.resolve([]);
   }
 
