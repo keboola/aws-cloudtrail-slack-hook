@@ -14,7 +14,7 @@ global.Promise = bluebird;
 
 const handlerFunction = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false; // eslint-disable-line no-param-reassign
-  
+
   const app = new App(
     new Slack(process.env.SLACK_URL, process.env.SERVICE_NAME, process.env.TIME_ZONE),
     new S3Download(new aws.S3()),

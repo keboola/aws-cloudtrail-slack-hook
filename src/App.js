@@ -48,7 +48,7 @@ export default class App {
         res(filteredRecords);
       });
     }
-    this.log(`File processed with 0 records`, logFile);
+    this.log('File processed with 0 records', logFile);
     return Promise.resolve([]);
   }
 
