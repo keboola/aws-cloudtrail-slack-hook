@@ -11,10 +11,10 @@
   "dependencies": {
     "@babel/runtime": "^7.1.2",
     "@keboola/middy-error-logger": "^1.0.1",
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "bluebird": "^3.5.2",
     "lodash": "^4.17.11",
-    "middy": "^0.27.0",
+    "middy": "^0.30.4",
     "moment-timezone": "^0.5.21",
     "source-map-support": "^0.5.9"
   },
@@ -29,7 +29,7 @@
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.8.0",
     "babel-loader": "^8.0.4",
-    "eslint": "^5.7.0",
+    "eslint": "^6.5.1",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jest": "^22.6.4",
     "jest": "^24.8.0",
