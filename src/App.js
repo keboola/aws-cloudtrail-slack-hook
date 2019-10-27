@@ -41,11 +41,10 @@ export default class App {
     this.log('Processing file', logFile);
     const log = await this.s3Download.retrieveAndUnGzipLog(logFile);
     if (log.Records && _.isArray(log.Records)) {
-      return new Promise(async (res) => {
-        const filteredRecords = _.filter(log.Records, event => this.shouldLogEvent(event));
-        this.log(`File processed with ${_.size(filteredRecords)} records`, logFile);
-        res(filteredRecords);
-      });
+      this.log(`Found ${_.size(log.Records)} records`, logFile);
+      const filteredRecords = _.filter(log.Records, event => this.shouldLogEvent(event));
+      this.log(`File processed with ${_.size(filteredRecords)} records`, logFile);
+      return Promise.resolve(filteredRecords);
     }
     this.log('File processed with 0 records', logFile);
     return Promise.resolve([]);
