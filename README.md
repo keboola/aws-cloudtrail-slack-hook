@@ -31,3 +31,18 @@ Deployment to production is run automatically on Travis after push to master bra
 - `PROD_SLACK_URL` - url of Slack incoming webhook
 - `PROD_TIME_ZONE` - time zone for event times (set to `Europe/Prague`)
 - `PROD_WATCHED_EVENTS` - comma-separated list of watched events
+
+#### Azure Devops Release (ALPHA)
+Deployment Release pipeline is created in Azure Devops for new AWS accounts.
+`deploy.sh` script is used there for deploy.
+
+Required environment:
+```
+# Identifies the stack in slack, only lowercase characters allowed
+export CLOUDTRAIL_SLACK_HOOK_NAME=cloudtrail-customer-xy
+export CLOUDTRAIL_SLACK_HOOK_TIME_ZONE=Europe/Prague
+export CLOUDTRAIL_SLACK_HOOK_SLACK_URL=
+export CLOUDTRAIL_SLACK_HOOK_REGION=eu-central-1
+export CLOUDTRAIL_SLACK_HOOK__WATCHED_EVENTS="AddUserToGroup,CreateAccessKey,CreateGroup,CreatePolicy,CreateRole,PutGroupPolicy,PutRolePolicy,PutUserPolicy,ConsoleLogin,SwitchRole,StopLogging,CreateNetworkAclEntry,CreateRoute,AuthorizeSecurityGroupEgress,AuthorizeSecurityGroupIngress,RevokeSecurityGroupEgress,RevokeSecurityGroupIngress,ApplySecurityGroupsToLoadBalancer,SetSecurityGroups,AuthorizeDBSecurityGroupIngress,CreateDBSecurityGroup,DeleteDBSecurityGroup,RevokeDBSecurityGroupIngress"
+```
+
