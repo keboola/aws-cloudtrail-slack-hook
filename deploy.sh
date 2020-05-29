@@ -2,6 +2,29 @@
 set -Eeuo pipefail
 
 CLOUDTRAIL_SLACK_HOOK_NAME="cloudtrail-$KEBOOLA_STACK"
+WATCHED_EVENTS="AddUserToGroup,\
+CreateAccessKey,\
+CreateGroup,\
+CreatePolicy,\
+CreateRole,\
+PutGroupPolicy,\
+PutRolePolicy,\
+PutUserPolicy,\
+ConsoleLogin,\
+SwitchRole,\
+StopLogging,\
+CreateNetworkAclEntry,\
+CreateRoute,\
+AuthorizeSecurityGroupEgress,\
+AuthorizeSecurityGroupIngress,\
+RevokeSecurityGroupEgress,\
+RevokeSecurityGroupIngress,\
+ApplySecurityGroupsToLoadBalancer,\
+SetSecurityGroups,\
+AuthorizeDBSecurityGroupIngress,\
+CreateDBSecurityGroup,\
+DeleteDBSecurityGroup,\
+RevokeDBSecurityGroupIngress"
 
 aws cloudformation deploy \
     --stack-name kbc-cloudtrail-slack-hook \
@@ -39,11 +62,11 @@ docker run --rm \
     -e CLOUDFORMATION_ROLE_ARN \
     -e LAMBDA_EXECUTION_ROLE_ARN \
     -e REGION \
-    -e "KEBOOLA_STACK=kbc-cloudtrail-slack-hook" \
+    -e WATCHED_EVENTS \
+    -e KEBOOLA_STACK \
+    -e "STAGE=prod" \
     -e "SERVICE_NAME=${CLOUDTRAIL_SLACK_HOOK_NAME}" \
     -e "SLACK_URL=${CLOUDTRAIL_SLACK_HOOK_SLACK_URL}" \
-    -e "STAGE=prod" \
     -e "TIME_ZONE=${CLOUDTRAIL_SLACK_HOOK_TIME_ZONE}" \
-    -e "WATCHED_EVENTS=${CLOUDTRAIL_SLACK_HOOK__WATCHED_EVENTS}" \
     kbc-cloudtrail-slack-hook serverless deploy
 
