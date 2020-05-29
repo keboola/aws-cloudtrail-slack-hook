@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 CLOUDTRAIL_SLACK_HOOK_NAME="cloudtrail-$KEBOOLA_STACK"
-WATCHED_EVENTS="AddUserToGroup,\
+export WATCHED_EVENTS="AddUserToGroup,\
 CreateAccessKey,\
 CreateGroup,\
 CreatePolicy,\
