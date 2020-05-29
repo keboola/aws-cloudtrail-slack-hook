@@ -39,7 +39,7 @@ Deployment Release pipeline is created in Azure Devops for new AWS accounts.
 Required environment:
 ```
 # Identifies the stack in slack, only lowercase characters allowed
-export CLOUDTRAIL_SLACK_HOOK_NAME=cloudtrail-customer-xy
+export KEBOOLA_STACK=
 export CLOUDTRAIL_SLACK_HOOK_TIME_ZONE=Europe/Prague
 export CLOUDTRAIL_SLACK_HOOK_SLACK_URL=
 export CLOUDTRAIL_SLACK_HOOK__WATCHED_EVENTS="AddUserToGroup,CreateAccessKey,CreateGroup,CreatePolicy,CreateRole,PutGroupPolicy,PutRolePolicy,PutUserPolicy,ConsoleLogin,SwitchRole,StopLogging,CreateNetworkAclEntry,CreateRoute,AuthorizeSecurityGroupEgress,AuthorizeSecurityGroupIngress,RevokeSecurityGroupEgress,RevokeSecurityGroupIngress,ApplySecurityGroupsToLoadBalancer,SetSecurityGroups,AuthorizeDBSecurityGroupIngress,CreateDBSecurityGroup,DeleteDBSecurityGroup,RevokeDBSecurityGroupIngress"

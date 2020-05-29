@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+CLOUDTRAIL_SLACK_HOOK_NAME="cloudtrail-$KEBOOLA_STACK"
+
 aws cloudformation deploy \
     --stack-name kbc-cloudtrail-slack-hook \
     --template-file ./cf-stack.json \
