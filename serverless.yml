@@ -18,6 +18,7 @@ provider:
   cfnRole: ${env:CLOUDFORMATION_ROLE_ARN}
   role: ${env:LAMBDA_EXECUTION_ROLE_ARN}
   versionFunctions: false
+  stackName: kbc-cloudtrail-slack-hook
   deploymentBucket:
     name: "${env:S3_DEPLOYMENT_BUCKET}"
   stackTags:

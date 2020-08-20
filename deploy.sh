@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-CLOUDTRAIL_SLACK_HOOK_NAME="cloudtrail-$KEBOOLA_STACK"
 export WATCHED_EVENTS="AddUserToGroup,\
 CreateAccessKey,\
 CreateGroup,\
@@ -32,7 +31,7 @@ aws cloudformation deploy \
     --no-fail-on-empty-changeset \
     --capabilities CAPABILITY_NAMED_IAM \
     --parameter-overrides \
-      ServiceName=$CLOUDTRAIL_SLACK_HOOK_NAME \
+      ServiceName=$KEBOOLA_STACK \
       Stage=prod
 
 export CLOUDFORMATION_ROLE_ARN=`aws cloudformation describe-stacks \
@@ -70,7 +69,7 @@ docker run --rm \
     -e WATCHED_EVENTS \
     -e KEBOOLA_STACK \
     -e "STAGE=prod" \
-    -e "SERVICE_NAME=${CLOUDTRAIL_SLACK_HOOK_NAME}" \
+    -e "SERVICE_NAME=${KEBOOLA_STACK}" \
     -e "SLACK_URL=${CLOUDTRAIL_SLACK_HOOK_SLACK_URL}" \
     -e "TIME_ZONE=${CLOUDTRAIL_SLACK_HOOK_TIME_ZONE}" \
     -e "S3_DEPLOYMENT_BUCKET=${S3_DEPLOYMENT_BUCKET}" \
