@@ -26,7 +26,7 @@ DeleteDBSecurityGroup,\
 RevokeDBSecurityGroupIngress"
 
 aws cloudformation deploy \
-    --stack-name kbc-cloudtrail-slack-hook \
+    --stack-name kbc-cloudtrail-slack-hook-resources \
     --template-file ./cf-stack.json \
     --no-fail-on-empty-changeset \
     --capabilities CAPABILITY_NAMED_IAM \
@@ -35,22 +35,22 @@ aws cloudformation deploy \
       Stage=prod
 
 export CLOUDFORMATION_ROLE_ARN=`aws cloudformation describe-stacks \
-  --stack-name kbc-cloudtrail-slack-hook \
+  --stack-name kbc-cloudtrail-slack-hook-resources \
   --query "Stacks[0].Outputs[?OutputKey=='ServerlessCloudFormationRole'].OutputValue" \
   --output text`
 
 export LAMBDA_EXECUTION_ROLE_ARN=`aws cloudformation describe-stacks \
-  --stack-name kbc-cloudtrail-slack-hook \
+  --stack-name kbc-cloudtrail-slack-hook-resources \
   --query "Stacks[0].Outputs[?OutputKey=='ServerlessLambdaExecutionRole'].OutputValue" \
   --output text`
 
 export REGION=`aws cloudformation describe-stacks \
-  --stack-name kbc-cloudtrail-slack-hook \
+  --stack-name kbc-cloudtrail-slack-hook-resources \
   --query "Stacks[0].Outputs[?OutputKey=='Region'].OutputValue" \
   --output text`
 
 export S3_DEPLOYMENT_BUCKET=`aws cloudformation describe-stacks \
-  --stack-name kbc-cloudtrail-slack-hook \
+  --stack-name kbc-cloudtrail-slack-hook-resources \
   --query "Stacks[0].Outputs[?OutputKey=='ServerlessDeploymentS3Bucket'].OutputValue" \
   --output text`
 
