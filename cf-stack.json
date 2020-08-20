@@ -125,7 +125,9 @@
               ],
               "Resource": [
                 { "Fn::Sub": "arn:aws:s3:::${ServiceName}-*" },
-                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-*/*" }
+                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-*/*" },
+                { "Fn::Sub": "arn:aws:s3:::${ServerlessDeploymentS3Bucket}" },
+                { "Fn::Sub": "arn:aws:s3:::${ServerlessDeploymentS3Bucket}/*" }
               ]
             },
             {
