@@ -112,7 +112,6 @@
     "ServerlessCloudFormationPolicy": {
       "Type": "AWS::IAM::ManagedPolicy",
       "Properties": {
-        "ManagedPolicyName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-sls-cf" },
         "Description": { "Fn::Sub": "${KeboolaStack} - CloudFormation Resources" },
         "PolicyDocument": {
           "Version": "2012-10-17",
