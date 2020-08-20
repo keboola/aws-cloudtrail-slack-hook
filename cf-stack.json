@@ -205,7 +205,6 @@
     "ServerlessLambdaExecutionRole": {
       "Type": "AWS::IAM::Role",
       "Properties": {
-        "RoleName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-sls-exec" },
         "AssumeRolePolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
@@ -226,7 +225,6 @@
         "ManagedPolicyArns": [],
         "Policies": [
           {
-            "PolicyName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-sls-exec" },
             "PolicyDocument": {
               "Version": "2012-10-17",
               "Statement": [
