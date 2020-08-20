@@ -19,7 +19,7 @@ provider:
   role: ${env:LAMBDA_EXECUTION_ROLE_ARN}
   versionFunctions: false
   deploymentBucket:
-    name: "${env:SERVICE_NAME}-${env:REGION}-deployment"
+    name: "${env:DEPLOY_S3_BUCKET}"
   stackTags:
     KeboolaStack: ${env:KEBOOLA_STACK}
   environment:

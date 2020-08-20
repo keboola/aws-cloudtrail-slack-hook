@@ -50,6 +50,11 @@ export REGION=`aws cloudformation describe-stacks \
   --query "Stacks[0].Outputs[?OutputKey=='Region'].OutputValue" \
   --output text`
 
+export DEPLOY_S3_BUCKET=`aws cloudformation describe-stacks \
+  --stack-name kbc-cloudtrail-slack-hook \
+  --query "Stacks[0].Outputs[?OutputKey=='ServerlessDeploymentS3Bucket'].OutputValue" \
+  --output text`
+
 docker build --tag kbc-cloudtrail-slack-hook .
 docker run --rm kbc-cloudtrail-slack-hook yarn test:lint
 docker run --rm kbc-cloudtrail-slack-hook yarn test:unit
@@ -68,5 +73,6 @@ docker run --rm \
     -e "SERVICE_NAME=${CLOUDTRAIL_SLACK_HOOK_NAME}" \
     -e "SLACK_URL=${CLOUDTRAIL_SLACK_HOOK_SLACK_URL}" \
     -e "TIME_ZONE=${CLOUDTRAIL_SLACK_HOOK_TIME_ZONE}" \
+    -e "DEPLOY_S3_BUCKET=${DEPLOY_S3_BUCKET}" \
     kbc-cloudtrail-slack-hook serverless deploy
 
