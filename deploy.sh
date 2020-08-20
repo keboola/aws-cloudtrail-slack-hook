@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-CLOUDTRAIL_SLACK_HOOK_NAME="$KEBOOLA_STACK"
+CLOUDTRAIL_SLACK_HOOK_NAME="cloudtrail-$KEBOOLA_STACK"
 export WATCHED_EVENTS="AddUserToGroup,\
 CreateAccessKey,\
 CreateGroup,\

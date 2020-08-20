@@ -174,7 +174,9 @@
               ],
               "Resource": [
                 { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-cloudtrail" },
-                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-cloudtrail/*" }
+                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-cloudtrail/*" },
+                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-cloudtrail" },
+                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-cloudtrail/*" }
               ]
             },
             {
@@ -254,7 +256,9 @@
                   ],
                   "Resource": [
                     { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-cloudtrail" },
-                    { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-cloudtrail/*" }
+                    { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-cloudtrail/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${ServiceName}-cloudtrail" },
+                    { "Fn::Sub": "arn:aws:s3:::${ServiceName}-cloudtrail/*" }
                   ]
                 }
               ]

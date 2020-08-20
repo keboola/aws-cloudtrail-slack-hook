@@ -45,7 +45,7 @@ resources:
     cloudTrailS3Bucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: '${env:SERVICE_NAME}-${env:REGION}-cloudtrail'
+        BucketName: '${env:SERVICE_NAME}-cloudtrail'
         NotificationConfiguration:
           LambdaConfigurations:
           - Event: s3:ObjectCreated:*
@@ -70,13 +70,13 @@ resources:
             Principal:
               Service: cloudtrail.amazonaws.com
             Action: s3:GetBucketAcl
-            Resource: 'arn:aws:s3:::${env:SERVICE_NAME}-${env:REGION}-cloudtrail'
+            Resource: 'arn:aws:s3:::${env:SERVICE_NAME}-cloudtrail'
           - Sid: AWSCloudTrailWrite
             Effect: Allow
             Principal:
               Service: cloudtrail.amazonaws.com
             Action: s3:PutObject
-            Resource: { 'Fn::Join': ['', ['arn:aws:s3:::${env:SERVICE_NAME}-${env:REGION}-cloudtrail/AWSLogs/', { Ref: 'AWS::AccountId' }, '/*']] }
+            Resource: { 'Fn::Join': ['', ['arn:aws:s3:::${env:SERVICE_NAME}-cloudtrail/AWSLogs/', { Ref: 'AWS::AccountId' }, '/*']] }
             Condition:
               StringEquals:
                 s3:x-amz-acl: bucket-owner-full-control
@@ -89,7 +89,7 @@ resources:
         IsLogging: true
         IncludeGlobalServiceEvents: true
         IsMultiRegionTrail: true
-        S3BucketName: '${env:SERVICE_NAME}-${env:REGION}-cloudtrail'
+        S3BucketName: '${env:SERVICE_NAME}-cloudtrail'
         Tags:
         - Key: 'KeboolaStack'
           Value: ${env:KEBOOLA_STACK}
@@ -101,4 +101,4 @@ resources:
         FunctionName: { 'Fn::GetAtt': ['CloudTrailListenerLambdaFunction', 'Arn'] }
         Principal: s3.amazonaws.com
         SourceAccount: { 'Ref': 'AWS::AccountId' }
-        SourceArn: 'arn:aws:s3:::${env:SERVICE_NAME}-${env:REGION}-cloudtrail'
+        SourceArn: 'arn:aws:s3:::${env:SERVICE_NAME}-cloudtrail'
