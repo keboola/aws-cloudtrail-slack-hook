@@ -64,7 +64,9 @@
               ],
               "Resource": [
                 { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-deployment" },
-                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-deployment/*" }
+                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-deployment/*" },
+                { "Fn::Sub": "arn:aws:s3:::${ServerlessDeploymentS3Bucket}" },
+                { "Fn::Sub": "arn:aws:s3:::${ServerlessDeploymentS3Bucket}/*" }
               ]
             },
             {
@@ -272,7 +274,6 @@
     "ServerlessDeploymentS3Bucket": {
       "Type": "AWS::S3::Bucket",
       "Properties": {
-        "BucketName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-deployment" },
         "LifecycleConfiguration": {
           "Rules": [
             {
@@ -297,6 +298,11 @@
     },
     "ServerlessCloudFormationRole": {
       "Value": { "Fn::GetAtt": ["ServerlessCloudFormationRole", "Arn"] }
+    },
+    "ServerlessDeploymentS3Bucket": {
+      "Value": {
+        "Ref": "ServerlessDeploymentS3Bucket"
+      }
     },
     "Region": {
       "Value": {
