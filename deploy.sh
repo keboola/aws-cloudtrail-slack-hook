@@ -29,7 +29,7 @@ aws cloudformation deploy \
     --stack-name kbc-cloudtrail-slack-hook-resources \
     --template-file ./cf-stack.json \
     --no-fail-on-empty-changeset \
-    --capabilities CAPABILITY_NAMED_IAM \
+    --capabilities CAPABILITY_IAM \
     --parameter-overrides \
       ServiceName=$KEBOOLA_STACK \
       Stage=prod

@@ -25,7 +25,6 @@
     "ServerlessDeploymentPolicy": {
       "Type": "AWS::IAM::ManagedPolicy",
       "Properties": {
-        "ManagedPolicyName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-deploy" },
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
@@ -86,7 +85,6 @@
     "ServerlessCloudFormationRole": {
       "Type": "AWS::IAM::Role",
       "Properties": {
-        "RoleName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-sls-cf" },
         "AssumeRolePolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
@@ -268,7 +266,6 @@
     "ServerlessDeploymentGroup": {
       "Type": "AWS::IAM::Group",
       "Properties": {
-        "GroupName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-deploy-group" },
         "ManagedPolicyArns": [
           { "Ref": "ServerlessDeploymentPolicy" }
         ],
