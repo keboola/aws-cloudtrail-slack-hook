@@ -43,8 +43,7 @@
                 "cloudformation:SetStackPolicy"
               ],
               "Resource": [
-                { "Fn::Sub": "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${ServiceName}-${Stage}/*" },
-                { "Fn::Sub": "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${ServiceName}-${Stage}-*/*" }
+                { "Fn::Sub": "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/kbc-cloudtrail-slack-hook-service/*" }
               ]
             },
             {
@@ -62,8 +61,6 @@
                 "s3:*"
               ],
               "Resource": [
-                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-deployment" },
-                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-deployment/*" },
                 { "Fn::Sub": "arn:aws:s3:::${ServerlessDeploymentS3Bucket}" },
                 { "Fn::Sub": "arn:aws:s3:::${ServerlessDeploymentS3Bucket}/*" }
               ]
