@@ -25,7 +25,6 @@
     "ServerlessDeploymentPolicy": {
       "Type": "AWS::IAM::ManagedPolicy",
       "Properties": {
-        "ManagedPolicyName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-deploy" },
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
@@ -64,7 +63,9 @@
               ],
               "Resource": [
                 { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-deployment" },
-                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-deployment/*" }
+                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-deployment/*" },
+                { "Fn::Sub": "arn:aws:s3:::${ServerlessDeploymentS3Bucket}" },
+                { "Fn::Sub": "arn:aws:s3:::${ServerlessDeploymentS3Bucket}/*" }
               ]
             },
             {
@@ -84,7 +85,6 @@
     "ServerlessCloudFormationRole": {
       "Type": "AWS::IAM::Role",
       "Properties": {
-        "RoleName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-sls-cf" },
         "AssumeRolePolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
@@ -110,7 +110,6 @@
     "ServerlessCloudFormationPolicy": {
       "Type": "AWS::IAM::ManagedPolicy",
       "Properties": {
-        "ManagedPolicyName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-sls-cf" },
         "Description": { "Fn::Sub": "${KeboolaStack} - CloudFormation Resources" },
         "PolicyDocument": {
           "Version": "2012-10-17",
@@ -123,7 +122,9 @@
               ],
               "Resource": [
                 { "Fn::Sub": "arn:aws:s3:::${ServiceName}-*" },
-                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-*/*" }
+                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-*/*" },
+                { "Fn::Sub": "arn:aws:s3:::${ServerlessDeploymentS3Bucket}" },
+                { "Fn::Sub": "arn:aws:s3:::${ServerlessDeploymentS3Bucket}/*" }
               ]
             },
             {
@@ -170,7 +171,9 @@
               ],
               "Resource": [
                 { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-cloudtrail" },
-                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-cloudtrail/*" }
+                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-cloudtrail/*" },
+                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-cloudtrail" },
+                { "Fn::Sub": "arn:aws:s3:::${ServiceName}-cloudtrail/*" }
               ]
             },
             {
@@ -199,7 +202,6 @@
     "ServerlessLambdaExecutionRole": {
       "Type": "AWS::IAM::Role",
       "Properties": {
-        "RoleName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-sls-exec" },
         "AssumeRolePolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
@@ -220,7 +222,7 @@
         "ManagedPolicyArns": [],
         "Policies": [
           {
-            "PolicyName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-sls-exec" },
+            "PolicyName": "Services",
             "PolicyDocument": {
               "Version": "2012-10-17",
               "Statement": [
@@ -250,7 +252,9 @@
                   ],
                   "Resource": [
                     { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-cloudtrail" },
-                    { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-cloudtrail/*" }
+                    { "Fn::Sub": "arn:aws:s3:::${ServiceName}-${AWS::Region}-cloudtrail/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${ServiceName}-cloudtrail" },
+                    { "Fn::Sub": "arn:aws:s3:::${ServiceName}-cloudtrail/*" }
                   ]
                 }
               ]
@@ -262,7 +266,6 @@
     "ServerlessDeploymentGroup": {
       "Type": "AWS::IAM::Group",
       "Properties": {
-        "GroupName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-deploy-group" },
         "ManagedPolicyArns": [
           { "Ref": "ServerlessDeploymentPolicy" }
         ],
@@ -272,7 +275,6 @@
     "ServerlessDeploymentS3Bucket": {
       "Type": "AWS::S3::Bucket",
       "Properties": {
-        "BucketName": { "Fn::Sub": "${ServiceName}-${AWS::Region}-deployment" },
         "LifecycleConfiguration": {
           "Rules": [
             {
@@ -297,6 +299,11 @@
     },
     "ServerlessCloudFormationRole": {
       "Value": { "Fn::GetAtt": ["ServerlessCloudFormationRole", "Arn"] }
+    },
+    "ServerlessDeploymentS3Bucket": {
+      "Value": {
+        "Ref": "ServerlessDeploymentS3Bucket"
+      }
     },
     "Region": {
       "Value": {

@@ -59,4 +59,5 @@ jobs:
       -e "STAGE=prod"
       -e "TIME_ZONE=${PROD_TIME_ZONE}"
       -e "WATCHED_EVENTS=${PROD_WATCHED_EVENTS}"
+      -e "S3_DEPLOYMENT_BUCKET=${PROD_S3_DEPLOYMENT_BUCKET}"
       "${ECR_REGISTRY}:${ECR_TAG}" serverless deploy
