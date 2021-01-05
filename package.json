@@ -11,7 +11,7 @@
   "dependencies": {
     "@babel/runtime": "^7.1.2",
     "@keboola/middy-error-logger": "^1.0.1",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "bluebird": "^3.5.2",
     "lodash": "^4.17.11",
     "middy": "^0.30.4",
