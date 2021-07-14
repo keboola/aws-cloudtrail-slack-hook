@@ -15,8 +15,9 @@ provider:
   region: ${env:REGION}
   stage: ${env:STAGE}
   timeout: 60
-  cfnRole: ${env:CLOUDFORMATION_ROLE_ARN}
-  role: ${env:LAMBDA_EXECUTION_ROLE_ARN}
+  iam:
+    deploymentRole: ${env:CLOUDFORMATION_ROLE_ARN}
+    role: ${env:LAMBDA_EXECUTION_ROLE_ARN}
   versionFunctions: false
   stackName: kbc-cloudtrail-slack-hook-service
   deploymentBucket:
