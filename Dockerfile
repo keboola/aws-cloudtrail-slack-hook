@@ -7,7 +7,7 @@ RUN curl --silent https://dl.yarnpkg.com/rpm/yarn.repo > /etc/yum.repos.d/yarn.r
 RUN yum -y install nodejs yarn
 
 # serverless
-RUN npm install -g serverless@1.43
+RUN npm install -g serverless@2.51
 
 # working directory
 ADD ./ /code
